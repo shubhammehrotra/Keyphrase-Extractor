@@ -92,6 +92,103 @@ def score_keyphrases_by_textrank(text, n_keywords=0.05):
     
     return sorted(keyphrases.items(), key=lambda x: x[1], reverse=True)
 
+def extract_candidate_features(candidates, doc_text, doc_excerpt, doc_title):
+    import collections, math, nltk, re
+    
+    candidate_scores = collections.OrderedDict()
+    
+    # get word counts for document
+    doc_word_counts = collections.Counter(word.lower()
+                                          for sent in nltk.sent_tokenize(doc_text)
+                                          for word in nltk.word_tokenize(sent))
+    
+    for candidate in candidates:
+        
+        pattern = re.compile(r'\b'+re.escape(candidate)+r'(\b|[,;.!?]|\s)', re.IGNORECASE)
+        
+        # frequency-based
+        # number of times candidate appears in document
+        cand_doc_count = len(pattern.findall(doc_text))
+        # count could be 0 for multiple reasons; shit happens in a simplified example
+        if not cand_doc_count:
+            print ('**WARNING:', candidate, 'not found!')
+            continue
+    
+        # statistical
+        candidate_words = candidate.split()
+        max_word_length = max(len(w) for w in candidate_words)
+        term_length = len(candidate_words)
+        # get frequencies for term and constituent words
+        sum_doc_word_counts = float(sum(doc_word_counts[w] for w in candidate_words))
+        try:
+            # lexical cohesion doesn't make sense for 1-word terms
+            if term_length == 1:
+                lexical_cohesion = 0.0
+            else:
+                lexical_cohesion = term_length * (1 + math.log(cand_doc_count, 10)) * cand_doc_count / sum_doc_word_counts
+        except (ValueError, ZeroDivisionError) as e:
+            lexical_cohesion = 0.0
+        
+        # positional
+        # found in title, key excerpt
+        in_title = 1 if pattern.search(doc_title) else 0
+        in_excerpt = 1 if pattern.search(doc_excerpt) else 0
+        # first/last position, difference between them (spread)
+        doc_text_length = float(len(doc_text))
+        first_match = pattern.search(doc_text)
+        abs_first_occurrence = first_match.start() / doc_text_length
+        if cand_doc_count == 1:
+            spread = 0.0
+            abs_last_occurrence = abs_first_occurrence
+        else:
+            for last_match in pattern.finditer(doc_text):
+                pass
+            abs_last_occurrence = last_match.start() / doc_text_length
+            spread = abs_last_occurrence - abs_first_occurrence
+
+        candidate_scores[candidate] = {'term_count': cand_doc_count,
+                                       'term_length': term_length, 'max_word_length': max_word_length,
+                                       'spread': spread, 'lexical_cohesion': lexical_cohesion,
+                                       'in_excerpt': in_excerpt, 'in_title': in_title,
+                                       'abs_first_occurrence': abs_first_occurrence,
+                                       'abs_last_occurrence': abs_last_occurrence}
+
+    return candidate_scores
+
+def inputFormat(fileName, filePath):
+    import csv
+    for file in fileName:
+    #fileName = "C:/Users/shubham_15294/Downloads/reviews_ElectronicsSplitTagged.csv"
+        fileRead = open(filePath + file,"rU")
+        inputSentence = ''
+        with fileRead as tsvfile:
+            tsvreader = csv.reader(tsvfile)
+            id = 0
+            for lines in tsvreader:
+                #print(lines[2])
+                id = id + 1
+                tag = int(lines[2])
+                #if lines[2] == :
+                 #   print (lines[2])
+                if  (tag == 1):
+                    text = lines[1]
+                    #print(tag)
+                    inputSentence = inputSentence + ' ' + text
+        #print (inputSentence)
+        output = score_keyphrases_by_textrank(inputSentence)
+        fileWrite(output,fileName, filePath)
+        #return inputSentence
+
+def fileWrite(output, fileName, filePath):
+    import csv
+    for file in fileName:
+        csvFile = csv.writer(open(filePath + file + "Output.csv", "w",newline=''))
+        #csvFile.writer(open(filePath + file + "Output.csv", "w",newline=''))
+        for out in output:
+            csvFile.writerow([out])
+            
+
+
 #output1 = extract_candidate_chunks("Despite wide applicability and much research, keyphrase extraction suffers from poor performance relative to many other core NLP tasks, partly because there’s no objectively “correct” set of keyphrases for a given document. While human-labeled keyphrases are generally considered to be the gold standard, humans disagree about what that standard is! As a general rule of thumb, keyphrases should be relevant to one or more of a document’s major topics, and the set of keyphrases describing a document should provide good coverage of all major topics. (They should also be understandable and grammatical, of course.) The fundamental difficulty lies in determining which keyphrases are the most relevant and provide the best coverage. As described in Automatic Keyphrase Extraction: A Survey of the State of the Art, several factors contribute to this difficulty, including document length, structural inconsistency, changes in topic, and (a lack of) correlations between topics.") 
 #print(output1)
 #output2 = extract_candidate_words("Despite wide applicability and much research, keyphrase extraction suffers from poor performance relative to many other core NLP tasks, partly because there’s no objectively “correct” set of keyphrases for a given document. While human-labeled keyphrases are generally considered to be the gold standard, humans disagree about what that standard is! As a general rule of thumb, keyphrases should be relevant to one or more of a document’s major topics, and the set of keyphrases describing a document should provide good coverage of all major topics. (They should also be understandable and grammatical, of course.) The fundamental difficulty lies in determining which keyphrases are the most relevant and provide the best coverage. As described in Automatic Keyphrase Extraction: A Survey of the State of the Art, several factors contribute to this difficulty, including document length, structural inconsistency, changes in topic, and (a lack of) correlations between topics.")
@@ -99,6 +196,9 @@ def score_keyphrases_by_textrank(text, n_keywords=0.05):
 
 #output3 = score_keyphrases_by_tfidf("Despite wide applicability and much research, keyphrase extraction suffers from poor performance relative to many other core NLP tasks, partly because there’s no objectively “correct” set of keyphrases for a given document. While human-labeled keyphrases are generally considered to be the gold standard, humans disagree about what that standard is! As a general rule of thumb, keyphrases should be relevant to one or more of a document’s major topics, and the set of keyphrases describing a document should provide good coverage of all major topics. (They should also be understandable and grammatical, of course.) The fundamental difficulty lies in determining which keyphrases are the most relevant and provide the best coverage. As described in Automatic Keyphrase Extraction: A Survey of the State of the Art, several factors contribute to this difficulty, including document length, structural inconsistency, changes in topic, and (a lack of) correlations between topics.")
 #print('Output for method 3 '+ output3)
-
-output4 = score_keyphrases_by_textrank("Despite wide applicability and much research, keyphrase extraction suffers from poor performance relative to many other core NLP tasks, partly because there’s no objectively “correct” set of keyphrases for a given document. While human-labeled keyphrases are generally considered to be the gold standard, humans disagree about what that standard is! As a general rule of thumb, keyphrases should be relevant to one or more of a document’s major topics, and the set of keyphrases describing a document should provide good coverage of all major topics. (They should also be understandable and grammatical, of course.) The fundamental difficulty lies in determining which keyphrases are the most relevant and provide the best coverage. As described in Automatic Keyphrase Extraction: A Survey of the State of the Art, several factors contribute to this difficulty, including document length, structural inconsistency, changes in topic, and (a lack of) correlations between topics.")
-print(output4)
+filePath = "C:/Users/shubham_15294/Downloads/"
+fileName = ["reviews_ElectronicsSplitTagged.csv","reviews_Home_and_KitchenTagged.csv","reviews_BabySplitTagged.csv"]
+inputFormat(fileName,filePath)
+#output4 = score_keyphrases_by_textrank(text)
+#print(output4)
+print ('Done')
