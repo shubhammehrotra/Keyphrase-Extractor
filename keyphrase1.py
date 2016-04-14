@@ -17,7 +17,7 @@ def extract_candidate_chunks(text, grammar=r'KT: {(<JJ>* <NN.*>+ <IN>)? <JJ>* <N
             if cand not in stop_words and not all(char in punct for char in cand)]
 
 
-def extract_candidate_words(text, good_tags=set(['JJ','JJR','JJS','NN','NNP','NNS','NNPS'])):
+def extract_candidate_words(text, good_tags=set(['JJ','JJR','JJS','NN','NNP','NNS','NNPS','VB','VBD','VBG','VBN','VBP','VBZ'])):
     import itertools, nltk, string
 
     # exclude candidates that are stop words or entirely punctuation
