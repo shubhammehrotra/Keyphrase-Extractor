@@ -159,6 +159,7 @@ def extract_candidate_features(candidates, doc_text, doc_excerpt, doc_title):
 
 def inputFormat(file, inputFilePath):
     import csv
+    outputFilePath = "C:/Python34/Keyphrase/SentenceWiseKeyPhrase/"
     #fileName = "C:/Users/shubham_15294/Downloads/reviews_ElectronicsSplitTagged.csv"
     fileRead = open(inputFilePath + file + ".csv","r")
     inputSentence = ''
@@ -170,20 +171,15 @@ def inputFormat(file, inputFilePath):
             tag = int(lines[2])
             #if  (tag == 1):
             text = lines[1]
-            inputSentence = inputSentence + ' ' + text
-            #output = score_keyphrases_by_textrank(inputSentence)
-            #fileWrite(output,fileName, filePath)
-    return inputSentence
+            #inputSentence = inputSentence + ' ' + text
+            output = score_keyphrases_by_textrank(text)
+            fileWrite(text, output, file, outputFilePath)
+    #return inputSentence
         
-def fileWrite(output, file, outputFilePath):
+def fileWrite(text, output, file, outputFilePath):
     import csv, os
-    try:
-        os.remove(outputFilePath + file + "Output.csv")
-    except OSError:
-        pass
-    csvFile = csv.writer(open(outputFilePath + file + "Output.csv", "w",newline=''))
-    for out in output:
-        csvFile.writerow([out])
+    csvFile = csv.writer(open(outputFilePath + file + "Output.csv", "a",newline=''))
+    csvFile.writerow([text, output])
             
 
 
@@ -195,14 +191,14 @@ def fileWrite(output, file, outputFilePath):
 #output3 = score_keyphrases_by_tfidf("Despite wide applicability and much research, keyphrase extraction suffers from poor performance relative to many other core NLP tasks, partly because there’s no objectively “correct” set of keyphrases for a given document. While human-labeled keyphrases are generally considered to be the gold standard, humans disagree about what that standard is! As a general rule of thumb, keyphrases should be relevant to one or more of a document’s major topics, and the set of keyphrases describing a document should provide good coverage of all major topics. (They should also be understandable and grammatical, of course.) The fundamental difficulty lies in determining which keyphrases are the most relevant and provide the best coverage. As described in Automatic Keyphrase Extraction: A Survey of the State of the Art, several factors contribute to this difficulty, including document length, structural inconsistency, changes in topic, and (a lack of) correlations between topics.")
 #print('Output for method 3 '+ output3)
 inputFilePath = "C:/Users/shubham_15294/Downloads/"
-outputFilePath = "C:/Python34/Keyphrase/SentencesCombined/"
+outputFilePath = "C:/Python34/Keyphrase/"
 fileName = ["reviews_Home_and_KitchenTagged","reviews_BabySplitTagged","reviews_ElectronicsSplitTagged"]
 #inputFormat(fileName,filePath)
 for file in fileName:
-    inputSentence = inputFormat(file, inputFilePath)
+    inputFormat(file, inputFilePath)
     #output = score_keyphrases_by_textrank(inputSentence)
-    output = extract_candidate_chunks(inputSentence)
-    fileWrite(output, file, outputFilePath)
+    #output = extract_candidate_chunks(inputSentence)
+    #fileWrite(output, file, outputFilePath)
     #for key in output:
     #    print (key[0])
     print(file + ' Done')
