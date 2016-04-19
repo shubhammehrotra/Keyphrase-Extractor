@@ -183,7 +183,7 @@ def fileWrite(output, file, outputFilePath):
         pass
     csvFile = csv.writer(open(outputFilePath + file + "Output.csv", "w",newline=''))
     for out in output:
-        csvFile.writerow([out[0]])
+        csvFile.writerow([out])
             
 
 
@@ -195,13 +195,13 @@ def fileWrite(output, file, outputFilePath):
 #output3 = score_keyphrases_by_tfidf("Despite wide applicability and much research, keyphrase extraction suffers from poor performance relative to many other core NLP tasks, partly because there’s no objectively “correct” set of keyphrases for a given document. While human-labeled keyphrases are generally considered to be the gold standard, humans disagree about what that standard is! As a general rule of thumb, keyphrases should be relevant to one or more of a document’s major topics, and the set of keyphrases describing a document should provide good coverage of all major topics. (They should also be understandable and grammatical, of course.) The fundamental difficulty lies in determining which keyphrases are the most relevant and provide the best coverage. As described in Automatic Keyphrase Extraction: A Survey of the State of the Art, several factors contribute to this difficulty, including document length, structural inconsistency, changes in topic, and (a lack of) correlations between topics.")
 #print('Output for method 3 '+ output3)
 inputFilePath = "C:/Users/shubham_15294/Downloads/"
-outputFilePath = "C:/Python34/Keyphrase/SentencesCombined/"
+outputFilePath = "C:/Python34/Keyphrase/SentencesCombinedTFIDF/"
 fileName = ["reviews_Home_and_KitchenTagged","reviews_BabySplitTagged","reviews_ElectronicsSplitTagged"]
 #inputFormat(fileName,filePath)
 for file in fileName:
     inputSentence = inputFormat(file, inputFilePath)
     #output = score_keyphrases_by_textrank(inputSentence)
-    output = score_keyphrases_by_textrank(inputSentence)
+    output = score_keyphrases_by_tfidf(inputSentence)
     fileWrite(output, file, outputFilePath)
     #for key in output:
     #    print (key[0])
