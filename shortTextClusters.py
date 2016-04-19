@@ -38,7 +38,8 @@ def build_word_vector_matrix(vector_file, n_words):
                         numpy_arrays.append( numpy.array([float(i) for i in sr[1:]]) )
 
                         if c == n_words:
-                                return numpy.array( numpy_arrays ), labels_array
+                                return numpy.array( numpy_arrays ), labels
+                                _array
 
         return numpy.array(numpy_arrays), labels_array
 
@@ -109,7 +110,7 @@ def build_topic_sentence_vector(sentence_file_path, vector_file, n_words):
 
 if __name__ == "__main__":
         print ('Running');
-        fileName = ["reviews_ElectronicsSplitTaggedOutput","reviews_Home_and_KitchenTaggedOutput","reviews_BabySplitTaggedOutput"]
+        fileName = ["reviews_ElectronicsSplitTaggedOutput","reviews_BabySplitTaggedOutput"]
         input_vector_file = "C:/Users/shubham_15294/Downloads/glove.6B.300d.txt" # sys.arg[1] The Glove file to analyze (e.g. glove.6B.300d.txt)
         #sentence_file_path = "dataset/abortionSplit.csv"
         for file in fileName:
