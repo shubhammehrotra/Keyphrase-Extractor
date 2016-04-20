@@ -12,7 +12,7 @@ for v in variable:
         for text in f:
             count = count + 1
             fileRead = open(inputFilePath + fileName + ".csv","r")
-            if (count < 10):
+            if (count != -1):
                 with fileRead as tsvfile:
                     tsvreader = csv.reader(tsvfile)
                     for lines in tsvreader:
