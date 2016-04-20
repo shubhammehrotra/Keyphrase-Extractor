@@ -4,11 +4,12 @@ variable = ['Baby', 'Electronics']
 for v in variable:
     fileDirectory = 'C:/Python34/Keyphrase/output/' + v + '/'
     inputFilePath = "C:/Users/shubham_15294/Downloads/"
-    fileName = "reviews_" + v + "SplitTagged"
+    fileName = v
     for fn in os.listdir(fileDirectory):
         f = open(fileDirectory + fn,'r')
         count = 0
-        newFile = open('C:/Python34/Keyphrase/output/Sentences/' + v + '/' + fn + 'check.txt', 'w')
+        s = fn.strip(".txt")
+        newFile = open('C:/Python34/Keyphrase/output/Sentences/' + v + '/' + s + ' Sentence.txt', 'w')
         for text in f:
             count = count + 1
             fileRead = open(inputFilePath + fileName + ".csv","r")
