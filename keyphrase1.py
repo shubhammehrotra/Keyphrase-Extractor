@@ -12,7 +12,7 @@ def extract_candidate_chunks(text, grammar=r'KT: {(<JJ>* <NN.*>+ <IN>)? <JJ>* <N
     # join constituent chunk words into a single chunked phrase
     candidates = [' '.join(word for word, pos, chunk in group).lower()
                   for key, group in itertools.groupby(all_chunks, lambda word__pos__chunk: word__pos__chunk[2] != 'O') if key]
-
+    print(cand)
     return [cand for cand in candidates
             if cand not in stop_words and not all(char in punct for char in cand)]
 
@@ -30,17 +30,18 @@ def extract_candidate_words(text, good_tags=set(['JJ','JJR','JJS','NN','NNP','NN
     candidates = [word.lower() for word, tag in tagged_words
                   if tag in good_tags and word.lower() not in stop_words
                   and not all(char in punct for char in word)]
-
+    print(candidates)
     return candidates
 
 def score_keyphrases_by_tfidf(texts, candidates='chunks'):
-    import gensim, nltk
+    #import gensim, nltk
     
     # extract candidates from each text in texts, either chunks or words
     if candidates == 'chunks':
         boc_texts = [extract_candidate_chunks(text) for text in texts]
     elif candidates == 'words':
         boc_texts = [extract_candidate_words(text) for text in texts]
+        #print (boc_texts)
     # make gensim dictionary and corpus
     dictionary = gensim.corpora.Dictionary(boc_texts)
     corpus = [dictionary.doc2bow(boc_text) for boc_text in boc_texts]
@@ -201,7 +202,8 @@ fileName = ["reviews_Home_and_KitchenTagged","reviews_BabySplitTagged","reviews_
 for file in fileName:
     inputSentence = inputFormat(file, inputFilePath)
     #output = score_keyphrases_by_textrank(inputSentence)
-    output = score_keyphrases_by_textrank(inputSentence)
+    output = extract_candidate_chunks(inputSentence)
+    print(output)
     fileWrite(output, file, outputFilePath)
     #for key in output:
     #    print (key[0])

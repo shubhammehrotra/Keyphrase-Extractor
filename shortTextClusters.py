@@ -140,7 +140,7 @@ if __name__ == "__main__":
                     print(cluster_to_sentences[c])
                     buffer = ""
                     for i in cluster_to_sentences[c]:
-                            buffer = buffer + i + "\n"
+                            buffer = buffer + i
                     #csvFile = csv.writer(open(out_directory + file + "cluster" + str(cluster_count) + ".csv",'w'))        
                     f = open(out_directory + file + "cluster" + str(cluster_count) + ".txt",'w')        
                     f.write(buffer)

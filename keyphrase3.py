@@ -41,6 +41,7 @@ def score_keyphrases_by_tfidf(texts, candidates='chunks'):
         boc_texts = [extract_candidate_chunks(text) for text in texts]
     elif candidates == 'words':
         boc_texts = [extract_candidate_words(text) for text in texts]
+    print(boc_texts)
     # make gensim dictionary and corpus
     dictionary = gensim.corpora.Dictionary(boc_texts)
     corpus = [dictionary.doc2bow(boc_text) for boc_text in boc_texts]
