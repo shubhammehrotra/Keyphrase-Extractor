@@ -12,7 +12,7 @@ def extract_candidate_chunks(text, grammar=r'KT: {(<JJ>* <NN.*>+ <IN>)? <JJ>* <N
     # join constituent chunk words into a single chunked phrase
     candidates = [' '.join(word for word, pos, chunk in group).lower()
                   for key, group in itertools.groupby(all_chunks, lambda word__pos__chunk: word__pos__chunk[2] != 'O') if key]
-    print(cand)
+    #print(cand)
     return [cand for cand in candidates
             if cand not in stop_words and not all(char in punct for char in cand)]
 
@@ -30,7 +30,7 @@ def extract_candidate_words(text, good_tags=set(['JJ','JJR','JJS','NN','NNP','NN
     candidates = [word.lower() for word, tag in tagged_words
                   if tag in good_tags and word.lower() not in stop_words
                   and not all(char in punct for char in word)]
-    print(candidates)
+    #print(candidates)
     return candidates
 
 def score_keyphrases_by_tfidf(texts, candidates='chunks'):
@@ -168,7 +168,7 @@ def inputFormat(file, inputFilePath):
         id = 0
         for lines in tsvreader:
             id = id + 1
-            tag = int(lines[2])
+            #tag = int(lines[2])
             #if  (tag == 1):
             text = lines[1]
             inputSentence = inputSentence + ' ' + text
@@ -195,15 +195,16 @@ def fileWrite(output, file, outputFilePath):
 
 #output3 = score_keyphrases_by_tfidf("Despite wide applicability and much research, keyphrase extraction suffers from poor performance relative to many other core NLP tasks, partly because there’s no objectively “correct” set of keyphrases for a given document. While human-labeled keyphrases are generally considered to be the gold standard, humans disagree about what that standard is! As a general rule of thumb, keyphrases should be relevant to one or more of a document’s major topics, and the set of keyphrases describing a document should provide good coverage of all major topics. (They should also be understandable and grammatical, of course.) The fundamental difficulty lies in determining which keyphrases are the most relevant and provide the best coverage. As described in Automatic Keyphrase Extraction: A Survey of the State of the Art, several factors contribute to this difficulty, including document length, structural inconsistency, changes in topic, and (a lack of) correlations between topics.")
 #print('Output for method 3 '+ output3)
-inputFilePath = "C:/Users/shubham_15294/Downloads/"
+inputFilePath = "C:/Users/shubham_15294/Downloads/Suggestions Classified/"
 outputFilePath = "C:/Python34/Keyphrase/SentencesCombined/"
-fileName = ["reviews_Home_and_KitchenTagged","reviews_BabySplitTagged","reviews_ElectronicsSplitTagged"]
+fileName = ["Tweets1"]
 #inputFormat(fileName,filePath)
 for file in fileName:
     inputSentence = inputFormat(file, inputFilePath)
-    #output = score_keyphrases_by_textrank(inputSentence)
-    output = extract_candidate_chunks(inputSentence)
-    print(output)
+    print(inputSentence)
+    output = score_keyphrases_by_textrank(inputSentence)
+    #output = extract_candidate_chunks(inputSentence)
+    #print(output)
     fileWrite(output, file, outputFilePath)
     #for key in output:
     #    print (key[0])

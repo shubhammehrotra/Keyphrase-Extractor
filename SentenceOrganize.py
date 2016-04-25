@@ -1,9 +1,9 @@
 import os
 import csv
-variable = ['Electronics', 'Baby']
+variable = ['Tweets']
 for v in variable:
     fileDirectory = 'C:/Python34/Keyphrase/output/' + v + '/'
-    inputFilePath = "C:/Users/shubham_15294/Downloads/"
+    inputFilePath = "C:/Users/shubham_15294/Downloads/Suggestions Classified/"
     fileName = v
     for fn in os.listdir(fileDirectory):
         f = open(fileDirectory + fn,'r')
@@ -20,9 +20,8 @@ for v in variable:
                     tsvreader = csv.reader(tsvfile)
                     for lines in tsvreader:
                         
-                        tag = int(lines[2])
-                        if (tag == 1):
-                            
+                        tag = lines[2]
+                        if (tag == "1"):                            
                             sentence = lines[1]
                             a = str(text).strip()
                             if a in sentence:
